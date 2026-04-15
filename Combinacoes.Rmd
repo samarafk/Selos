@@ -1,0 +1,310 @@
+---
+title: "Combinações de Selos"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+```{r, message=FALSE}
+library(dplyr)
+library(DT)
+library(htmltools)
+```
+
+```{r, warning=FALSE}
+selos <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnRtgftgnjk-BD7TmX1Ps5WxKPMpk-MSxOHpu3FcJYlC7EMR550JNn9E7Koy4PRHu2Fx_1YSiemQGZ/pub?gid=0&single=true&output=csv")
+```
+
+```{r}
+
+selos$valor[selos$porte==1] = "3,85"
+selos$valor[selos$porte==2] = "5,40"
+selos$valor[selos$porte==3] = "7,45"
+```
+
+
+## Portes de Carta Comercial
+
+
+* Primeiro Porte - R$ `r selos$valor[selos$porte==1][1]`
+
+* Segundo Porte - R$ `r selos$valor[selos$porte==2][1]`
+
+* Terceiro Porte - R$ `r selos$valor[selos$porte==3][1]`
+
+
+
+```{r}
+grupoIII <- 7.45
+grupoIV <- 8.95
+grupoV <- 9.55
+```
+
+
+
+
+```{r}
+encontrar_combinacoes <- function(selos, alvo, tolerancia = 0, max_selos = 5, minimizar_selos = TRUE) {
+  
+  # 1. Preparação dos dados
+  selos$valor <- as.numeric(gsub(",", ".", selos$valor))
+  # Ordenar por valor ajuda a poda a ser mais eficiente
+  selos <- selos[order(selos$valor), ]
+  
+  solucoes <- list()
+  
+  # 2. Função Interna de Busca (Backtracking)
+  # i: índice do selo atual, atual_v: valor acumulado, 
+  # atual_q: qtd selos acumulada, caminho: vetor com índices dos selos
+  buscar <- function(i, atual_v, atual_q, caminho) {
+    
+    # Condição de sucesso: atingiu o alvo dentro da tolerância
+    if (atual_v >= alvo && atual_v <= (alvo + tolerancia)) {
+      solucoes <<- c(solucoes, list(caminho))
+      return()
+    }
+    
+    # Condição de parada (Poda): estourou valor, qtd ou acabaram os selos
+    if (atual_v > (alvo + tolerancia) || atual_q >= max_selos || i > nrow(selos)) {
+      return()
+    }
+    
+    # Opção 1: Incluir o selo atual (se respeitar o max_qtd do selo)
+    qtd_ja_usada <- sum(caminho == i)
+    if (qtd_ja_usada < selos$max_qtd[i]) {
+      buscar(i, atual_v + selos$valor[i], atual_q + 1, c(caminho, i))
+    }
+    
+    # Opção 2: Pular para o próximo tipo de selo
+    buscar(i + 1, atual_v, atual_q, caminho)
+  }
+  
+  # Executar a busca iniciando do primeiro selo
+  buscar(1, 0, 0, c())
+  
+  if (length(solucoes) == 0) return("Nenhuma combinação encontrada")
+  
+  # 3. Formatação dos Resultados (Igual ao seu original, mas otimizado)
+  resultados_df <- lapply(solucoes, function(indices) {
+    contagem <- table(indices)
+    nomes_selos <- selos$nome[as.numeric(names(contagem))]
+    
+    # Descrição: "2x Selo A + 1x Selo B"
+    desc <- paste(paste0(contagem, "x ", nomes_selos), collapse = " + ")
+    
+    # Visual: HTML das imagens
+    imgs_html <- paste0(sapply(indices, function(idx) {
+      paste0("<img src='", selos$imagem[idx], "' width='40'/>")
+    }), collapse = "")
+    
+    data.frame(
+      descricao = desc,
+      total = round(sum(selos$valor[indices]), 2),
+      n_selos = length(indices),
+      visual = imgs_html,
+      stringsAsFactors = FALSE
+    )
+  })
+  
+  final_df <- do.call(rbind, resultados_df) %>%
+    distinct(descricao, .keep_all = TRUE)
+  
+  # Ordenação final
+  if (minimizar_selos) {
+    final_df <- final_df[order(final_df$n_selos, final_df$total), ]
+  } else {
+    final_df <- final_df[order(final_df$total), ]
+  }
+  
+  return(final_df)
+}
+
+
+```
+
+
+
+## Grupo III - R$ 7,45 - Canadá e EUA
+
+
+<!-- ### Exato -->
+
+```{r}
+res <- encontrar_combinacoes(selos, alvo = grupoIII)
+
+if (is.data.frame(res) && nrow(res) > 0) {
+
+res$visual <- gsub('\\"', '"', res$visual)
+res$visual <- lapply(res$visual, HTML)
+datatable(
+  res,
+  escape = -which(names(res) == "visual"),
+  rownames = FALSE,  # Remove os números das linhas
+
+)
+}
+
+
+```
+
+
+<!-- ### Permitindo sobra de até R$ 0,20 -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- res <- encontrar_combinacoes(selos, alvo = grupoIII, tolerancia = 0.2) -->
+<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
+
+<!-- res$visual <- gsub('\\"', '"', res$visual) -->
+<!-- res$visual <- lapply(res$visual, HTML) -->
+<!-- datatable( -->
+<!--   res, -->
+<!--   escape = -which(names(res) == "visual"), -->
+<!--   rownames = FALSE,  # Remove os números das linhas -->
+<!-- ) -->
+<!-- } -->
+
+<!-- ``` -->
+
+
+<!-- ### Preferindo menos selos e sobra de até R$ 0,50 -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- res <- encontrar_combinacoes(selos, alvo = grupoIII, tolerancia = .5, minimizar_selos = TRUE) -->
+
+<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
+
+<!-- res$visual <- gsub('\\"', '"', res$visual) -->
+<!-- res$visual <- lapply(res$visual, HTML) -->
+<!-- datatable( -->
+<!--   res, -->
+<!--   escape = -which(names(res) == "visual"), -->
+<!--   rownames = FALSE,  # Remove os números das linhas -->
+<!-- ) -->
+<!-- } -->
+
+<!-- ``` -->
+
+
+
+
+
+
+## Grupo IV - R$ 8,95 - Europa
+
+
+<!-- ### Exato -->
+
+```{r}
+res <- encontrar_combinacoes(selos, alvo = grupoIV)
+
+if (is.data.frame(res) && nrow(res) > 0) {
+res$visual <- gsub('\\"', '"', res$visual)
+res$visual <- lapply(res$visual, HTML)
+datatable(
+  res,
+  escape = -which(names(res) == "visual"),
+  rownames = FALSE,  # Remove os números das linhas
+)
+}
+
+```
+
+
+<!-- ### Permitindo sobra de até R$ 0,20 -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- res <- encontrar_combinacoes(selos, alvo = grupoIV, tolerancia = 0.2) -->
+
+<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
+<!-- res$visual <- gsub('\\"', '"', res$visual) -->
+<!-- res$visual <- lapply(res$visual, HTML) -->
+<!-- datatable( -->
+<!--   res, -->
+<!--   escape = -which(names(res) == "visual"), -->
+<!--   rownames = FALSE,  # Remove os números das linhas -->
+<!-- ) -->
+<!-- } -->
+<!-- ``` -->
+
+
+<!-- ### Preferindo menos selos e sobra de até R$ 0,50 -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- res <- encontrar_combinacoes(selos, alvo = grupoIV, tolerancia = .5, minimizar_selos = TRUE) -->
+<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
+
+<!-- res$visual <- gsub('\\"', '"', res$visual) -->
+<!-- res$visual <- lapply(res$visual, HTML) -->
+<!-- datatable( -->
+<!--   res, -->
+<!--   escape = -which(names(res) == "visual"), -->
+<!--   rownames = FALSE,  # Remove os números das linhas -->
+<!-- ) -->
+<!-- } -->
+<!-- ``` -->
+
+
+
+
+
+## Grupo V - R$ 9,55 - Ásia, Rússia
+
+
+<!-- ### Exato -->
+
+```{r}
+res <- encontrar_combinacoes(selos, alvo = grupoV)
+
+if (is.data.frame(res) && nrow(res) > 0) {
+
+res$visual <- gsub('\\"', '"', res$visual)
+res$visual <- lapply(res$visual, HTML)
+datatable(
+  res,
+  escape = -which(names(res) == "visual"),
+  rownames = FALSE,  # Remove os números das linhas
+)
+}
+```
+
+
+<!-- ### Permitindo sobra de até R$ 0,20 -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- res <- encontrar_combinacoes(selos, alvo = grupoV, tolerancia = 0.2) -->
+
+<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
+
+<!-- res$visual <- gsub('\\"', '"', res$visual) -->
+<!-- res$visual <- lapply(res$visual, HTML) -->
+<!-- datatable( -->
+<!--   res, -->
+<!--   escape = -which(names(res) == "visual"), -->
+<!--   rownames = FALSE,  # Remove os números das linhas -->
+<!-- ) -->
+<!-- } -->
+<!-- ``` -->
+
+
+<!-- ### Preferindo menos selos e sobra de até R$ 0,50 -->
+
+<!-- ```{r, echo=FALSE} -->
+<!-- res <- encontrar_combinacoes(selos, alvo = grupoV, tolerancia = .5, minimizar_selos = TRUE) -->
+<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
+
+<!-- res$visual <- gsub('\\"', '"', res$visual) -->
+<!-- res$visual <- lapply(res$visual, HTML) -->
+<!-- datatable( -->
+<!--   res, -->
+<!--   escape = -which(names(res) == "visual"), -->
+<!--   rownames = FALSE,  # Remove os números das linhas -->
+<!-- ) -->
+<!-- } -->
+<!-- ``` -->
