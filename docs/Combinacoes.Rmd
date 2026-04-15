@@ -165,7 +165,7 @@ imgs_html <- paste(selos$img_html[indices], collapse = "")
 <!-- ### Exato -->
 
 ```{r}
-res <- encontrar_combinacoes(selos, alvo = grupoIII)
+res <- encontrar_combinacoes(selos, alvo = grupoIII,  max_selos = 4)
 
 if (is.data.frame(res) && nrow(res) > 0) {
 
@@ -182,64 +182,16 @@ datatable(
 
 ```
 
-<!-- ### Permitindo sobra de até R$ 0,20 -->
 
-<!-- ```{r, echo=FALSE} -->
 
-<!-- res <- encontrar_combinacoes(selos, alvo = grupoIII, tolerancia = 0.2) -->
 
-<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
-
-<!-- res$visual <- gsub('\\"', '"', res$visual) -->
-
-<!-- res$visual <- lapply(res$visual, HTML) -->
-
-<!-- datatable( -->
-
-<!--   res, -->
-
-<!--   escape = -which(names(res) == "visual"), -->
-
-<!--   rownames = FALSE,  # Remove os números das linhas -->
-
-<!-- ) -->
-
-<!-- } -->
-
-<!-- ``` -->
-
-<!-- ### Preferindo menos selos e sobra de até R$ 0,50 -->
-
-<!-- ```{r, echo=FALSE} -->
-
-<!-- res <- encontrar_combinacoes(selos, alvo = grupoIII, tolerancia = .5, minimizar_selos = TRUE) -->
-
-<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
-
-<!-- res$visual <- gsub('\\"', '"', res$visual) -->
-
-<!-- res$visual <- lapply(res$visual, HTML) -->
-
-<!-- datatable( -->
-
-<!--   res, -->
-
-<!--   escape = -which(names(res) == "visual"), -->
-
-<!--   rownames = FALSE,  # Remove os números das linhas -->
-
-<!-- ) -->
-
-<!-- } -->
-
-<!-- ``` -->
 
 ## Grupo IV - R\$ 8,95 - Europa
 
 <!-- ### Exato -->
 
 ```{r}
-res <- encontrar_combinacoes(selos, alvo = grupoIV)
+res <- encontrar_combinacoes(selos, alvo = grupoIV,  max_selos = 4)
 
 if (is.data.frame(res) && nrow(res) > 0) {
 res$visual <- gsub('\\"', '"', res$visual)
@@ -253,64 +205,13 @@ datatable(
 
 ```
 
-<!-- ### Permitindo sobra de até R$ 0,20 -->
 
-<!-- ```{r, echo=FALSE} -->
-
-<!-- res <- encontrar_combinacoes(selos, alvo = grupoIV, tolerancia = 0.2) -->
-
-<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
-
-<!-- res$visual <- gsub('\\"', '"', res$visual) -->
-
-<!-- res$visual <- lapply(res$visual, HTML) -->
-
-<!-- datatable( -->
-
-<!--   res, -->
-
-<!--   escape = -which(names(res) == "visual"), -->
-
-<!--   rownames = FALSE,  # Remove os números das linhas -->
-
-<!-- ) -->
-
-<!-- } -->
-
-<!-- ``` -->
-
-<!-- ### Preferindo menos selos e sobra de até R$ 0,50 -->
-
-<!-- ```{r, echo=FALSE} -->
-
-<!-- res <- encontrar_combinacoes(selos, alvo = grupoIV, tolerancia = .5, minimizar_selos = TRUE) -->
-
-<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
-
-<!-- res$visual <- gsub('\\"', '"', res$visual) -->
-
-<!-- res$visual <- lapply(res$visual, HTML) -->
-
-<!-- datatable( -->
-
-<!--   res, -->
-
-<!--   escape = -which(names(res) == "visual"), -->
-
-<!--   rownames = FALSE,  # Remove os números das linhas -->
-
-<!-- ) -->
-
-<!-- } -->
-
-<!-- ``` -->
 
 ## Grupo V - R\$ 9,55 - Ásia, Rússia
 
-<!-- ### Exato -->
 
 ```{r}
-res <- encontrar_combinacoes(selos, alvo = grupoV)
+res <- encontrar_combinacoes(selos, alvo = grupoV,  max_selos = 4)
 
 if (is.data.frame(res) && nrow(res) > 0) {
 
@@ -324,54 +225,4 @@ datatable(
 }
 ```
 
-<!-- ### Permitindo sobra de até R$ 0,20 -->
 
-<!-- ```{r, echo=FALSE} -->
-
-<!-- res <- encontrar_combinacoes(selos, alvo = grupoV, tolerancia = 0.2) -->
-
-<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
-
-<!-- res$visual <- gsub('\\"', '"', res$visual) -->
-
-<!-- res$visual <- lapply(res$visual, HTML) -->
-
-<!-- datatable( -->
-
-<!--   res, -->
-
-<!--   escape = -which(names(res) == "visual"), -->
-
-<!--   rownames = FALSE,  # Remove os números das linhas -->
-
-<!-- ) -->
-
-<!-- } -->
-
-<!-- ``` -->
-
-<!-- ### Preferindo menos selos e sobra de até R$ 0,50 -->
-
-<!-- ```{r, echo=FALSE} -->
-
-<!-- res <- encontrar_combinacoes(selos, alvo = grupoV, tolerancia = .5, minimizar_selos = TRUE) -->
-
-<!-- if (is.data.frame(res) && nrow(res) > 0) { -->
-
-<!-- res$visual <- gsub('\\"', '"', res$visual) -->
-
-<!-- res$visual <- lapply(res$visual, HTML) -->
-
-<!-- datatable( -->
-
-<!--   res, -->
-
-<!--   escape = -which(names(res) == "visual"), -->
-
-<!--   rownames = FALSE,  # Remove os números das linhas -->
-
-<!-- ) -->
-
-<!-- } -->
-
-<!-- ``` -->
