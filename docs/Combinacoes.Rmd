@@ -45,7 +45,7 @@ selos$valor[selos$porte==3] = "7,45"
 
 Selos considerados nas combinações:
 
-```{r}
+```{r, img_html}
 
 selos <- selos %>%
   rowwise() %>%
@@ -78,6 +78,7 @@ grupoIII <- 7.45
 grupoIV <- 8.95
 grupoV <- 9.55
 ```
+
 
 ```{r}
 encontrar_combinacoes <- function(selos, alvo, tolerancia = 0, max_selos = 5, minimizar_selos = TRUE) {
@@ -131,27 +132,7 @@ encontrar_combinacoes <- function(selos, alvo, tolerancia = 0, max_selos = 5, mi
 
     
 # Visual: HTML das imagens
-
- # imgs_html <- paste0(sapply(indices, function(idx) {
- #   # Carregar a imagem para obter dimensões (exemplo com magick)
- #   img <- magick::image_read(selos$imagem[idx])
- #   dims <- magick::image_info(img)
- #   
- #   # Calcular o fator de escala baseado no menor lado
- #   lado_menor <- min(dims$width, dims$height)
- #   escala <- 40 / lado_menor
- #   
- #   # Aplicar escala para ambos os lados
- #   nova_largura <- round(dims$width * escala)
- #   nova_altura <- round(dims$height * escala)
- #   
- #   paste0("<img src='", selos$imagem[idx], 
- #          "' width='", nova_largura, 
- #          "' height='", nova_altura, "'/>")
- # }), collapse = "")
- 
 imgs_html <- paste(selos$img_html[indices], collapse = "")
-
 
     
     data.frame(
