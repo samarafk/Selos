@@ -91,7 +91,7 @@ encontrar_combinacoes <- function(selos, alvo, tolerancia = 0, max_selos = 5, mi
   
   if (length(solucoes) == 0) return("Nenhuma combinação encontrada")
   
-  # 3. Formatação dos Resultados (Igual ao seu original, mas otimizado)
+  # 3. Formatação dos Resultados
   resultados_df <- lapply(solucoes, function(indices) {
     contagem <- table(indices)
     nomes_selos <- selos$nome[as.numeric(names(contagem))]
@@ -99,10 +99,31 @@ encontrar_combinacoes <- function(selos, alvo, tolerancia = 0, max_selos = 5, mi
     # Descrição: "2x Selo A + 1x Selo B"
     desc <- paste(paste0(contagem, "x ", nomes_selos), collapse = " + ")
     
-    # Visual: HTML das imagens
-    imgs_html <- paste0(sapply(indices, function(idx) {
-      paste0("<img src='", selos$imagem[idx], "' width='40'/>")
-    }), collapse = "")
+
+    
+# Visual: HTML das imagens
+
+ imgs_html <- paste0(sapply(indices, function(idx) {
+   # Carregar a imagem para obter dimensões (exemplo com magick)
+   img <- magick::image_read(selos$imagem[idx])
+   dims <- magick::image_info(img)
+   
+   # Calcular o fator de escala baseado no menor lado
+   lado_menor <- min(dims$width, dims$height)
+   escala <- 40 / lado_menor
+   
+   # Aplicar escala para ambos os lados
+   nova_largura <- round(dims$width * escala)
+   nova_altura <- round(dims$height * escala)
+   
+   paste0("<img src='", selos$imagem[idx], 
+          "' width='", nova_largura, 
+          "' height='", nova_altura, "'/>")
+ }), collapse = "")
+ 
+
+
+
     
     data.frame(
       descricao = desc,
