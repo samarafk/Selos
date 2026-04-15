@@ -20,6 +20,8 @@ library(htmltools)
 
 ```{r, warning=FALSE}
 selos <- read.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnRtgftgnjk-BD7TmX1Ps5WxKPMpk-MSxOHpu3FcJYlC7EMR550JNn9E7Koy4PRHu2Fx_1YSiemQGZ/pub?gid=0&single=true&output=csv")
+
+selos$max_qtd <- 2
 ```
 
 ```{r}
