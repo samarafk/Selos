@@ -1,0 +1,10 @@
+name: shiny
+title:
+username: samara
+account: samara
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17164440
+bundleId: 11867604
+url: https://samara.shinyapps.io/shiny/
+version: 1
