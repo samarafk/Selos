@@ -36,13 +36,13 @@ selos$valor[selos$porte=="2p"] = 5.40
 selos$valor[selos$porte=="3p"] = 7.45
 ```
 
-## Portes de Carta Comercial
+## Portes de Carta
 
--   Primeiro Porte - R\$ `r selos$valor[selos$porte=="1p"][1]`
+-   Primeiro Porte (Carta ou Comercial)- R\$ `r selos$valor[selos$porte=="1p"][1]`
 
--   Segundo Porte - R\$ `r selos$valor[selos$porte=="2p"][1]`
+-   Segundo Porte (Carta ou Comercial) - R\$ `r selos$valor[selos$porte=="2p"][1]`
 
--   Terceiro Porte - R\$ `r selos$valor[selos$porte=="3p"][1]`
+-   Terceiro Porte (Carta ou Comercial) - R\$ `r selos$valor[selos$porte=="3p"][1]`
 
 -   Primeiro Porte Não Comercial - R\$ `r selos$valor[selos$porte=="1pnc"][1]`
 
