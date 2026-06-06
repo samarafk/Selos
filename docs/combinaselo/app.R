@@ -9,9 +9,10 @@ selos <- read.csv("selos_disp.csv")
 
 selos$max_qtd <- 1
 
-selos$valor[selos$porte==1] = "3,85"
-selos$valor[selos$porte==2] = "5,40"
-selos$valor[selos$porte==3] = "7,45"
+selos$valor[selos$porte=="1pnc"] = "2,65"
+selos$valor[selos$porte=="1p"] = "3,85"
+selos$valor[selos$porte=="2p"] = "5,40"
+selos$valor[selos$porte=="3p"] = "7,45"
 
 # ---- IMAGES ----
 selos <- selos %>%
