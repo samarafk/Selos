@@ -173,7 +173,7 @@ imgs_html <- paste(selos$img_html[indices], collapse = "")
 <!-- ### Exato -->
 
 ```{r}
-res <- encontrar_combinacoes(selos, alvo = grupoIII,  max_selos = 4)
+res <- encontrar_combinacoes(selos, alvo = grupoIII,  max_selos = 5)
 
 if (is.data.frame(res) && nrow(res) > 0) {
 
@@ -199,7 +199,7 @@ datatable(
 <!-- ### Exato -->
 
 ```{r}
-res <- encontrar_combinacoes(selos, alvo = grupoIV,  max_selos = 4)
+res <- encontrar_combinacoes(selos, alvo = grupoIV,  max_selos = 5)
 
 if (is.data.frame(res) && nrow(res) > 0) {
 res$visual <- gsub('\\"', '"', res$visual)
