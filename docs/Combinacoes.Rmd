@@ -32,6 +32,7 @@ selos$valor <- as.numeric(gsub(",", ".", selos$valor))
 ```{r}
 selos$valor[selos$porte=="1pnc"] = 2.65
 selos$valor[selos$porte=="1p"] = 3.85
+selos$valor[selos$porte=="1p(x2)"] = 7.7
 selos$valor[selos$porte=="2p"] = 5.40
 selos$valor[selos$porte=="3p"] = 7.45
 ```
